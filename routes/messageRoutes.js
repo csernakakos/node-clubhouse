@@ -1,15 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const messageController = require("../controllers/messageController");
 
-router.get("/", (req, res) => {
-    res.json({
-        1: {
-            title: "first msg",
-            timestamp: JSON.stringify(new Date()),
-            body: "my secret message........",
-            createdBy: "USER!!!",
-        }
-    });
-})
+router.get("/", messageController.get_messages);
+router.post("/new-message", messageController.create_message)
 
 module.exports = router;
