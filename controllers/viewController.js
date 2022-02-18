@@ -22,7 +22,7 @@ exports.post_signupForm = async (req, res) => {
     } else {
         const newUser = await User.create(req.body);
         req.session.userID = newUser.email;
-    }
+    };
 
     res.status(201).redirect("/secret-passcode");
 };
@@ -38,11 +38,12 @@ exports.post_secretPasscode = async (req, res) => {
 
     // If wrong secret, do NOT set user to privilegedUser
     if (candidateSecret !== process.env.PASSCODESECRET) {
-        return res.status(200).render("home", {
+        req.session = {
             firstName: currentUser[0].firstName,
             membershipStatus: currentUser[0].membershipStatus,
-            isLoggedIn: true
-        })
+            isLoggedIn: true,
+        };
+        return res.status(200).redirect("home");
     };
     
     // If correct secret, set user to privilegedUser
@@ -54,10 +55,22 @@ exports.post_secretPasscode = async (req, res) => {
             { membershipStatus: currentUser[0].membershipStatus },
             {new: true, runValidators: true},
             );
-        res.status(200).render("home", {firstName: user.firstName, membershipStatus: "privileged user"})
-    }
 
-    return res.status(200).render("home", {firstName: currentUser[0].firstName, membershipStatus: currentUser[0].membershipStatus, isLoggedIn: true })
+            req.session = {
+                firstName: user.firstName,
+                membershipStatus: user.membershipStatus,
+                isLoggedIn: true,
+            };
+        res.status(200).redirect("home")
+    };
+
+    req.session = {
+        firstName: currentUser[0].firstName,
+        membershipStatus: currentUser[0].membershipStatus,
+        isLoggedIn: true,
+    };
+
+    return res.status(200).redirect("home")
 
 };
 
