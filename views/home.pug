@@ -1,0 +1,24 @@
+extends base
+
+block content
+    h1 Clubhouse
+
+    if isLoggedIn
+        p Welcome, #{firstName}. We're happy to have you as a new #{membershipStatus} among us.
+        a(href="/new-message") Post a message 
+    else
+        p You are not logged in. You can still see messages, but you won't see who created them and when.
+    
+    hr
+    div#messages
+    each message in messages
+        div#message
+        if membershipStatus === "privilegedUser" || membershipStatus === "admin"
+            form(action=`/delete-message/${message._id}` method="POST")
+                button#delete Delete
+        h3= message.title
+        if membershipStatus === "privilegedUser" || membershipStatus === "admin"
+            h4= message.timestamp
+            h4 CreatedBy Fake DATA: AKOS
+        p= message.body
+    

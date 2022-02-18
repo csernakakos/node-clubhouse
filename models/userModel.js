@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     // <---
     membershipStatus: {
         type: String,
-        enum: ["user", "privilegedUser",],
+        enum: ["user", "privilegedUser", "admin",],
         default: "user",
     },
     isAdmin: {
