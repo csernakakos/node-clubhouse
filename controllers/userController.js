@@ -56,6 +56,22 @@ exports.login_user = async (req, res) => {
     
 }
 
+exports.enter_secret_passcode_user = async(req, res) => {
+    const candidateSecret = req.body.secret;
+
+    if (candidateSecret !== process.env.PASSCODESECRET) {
+        return res.status(200).json({
+            status: "success",
+            msg: "you are NOT a privilegedUser."
+        })
+    };
+
+    res.status(200).json({
+        status: "success",
+        msg: "you are now a privilegedUser."
+    })
+}
+
 exports.logout_user = async (req, res) => {
     req.session = null;
     res.status(200).json({

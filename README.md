@@ -22,7 +22,7 @@ This is an exclusive Clubhouse where your members can write anonymous posts. Ins
 2. **DONE** Set up database and create project skeleton.
 3. **IMPROVE** finish Cookie work.
 4. Create `/sign-up` page with sign-up form.
-   1. Secure passwords with hash and salt.
+   1. **DONE** Secure passwords with hash and salt.
    2. Sanitize and validate data.
    3. Include `confirmPassword`.
 5. Create `/secret-passcode` page. When users sign up, they should automatically be given a `membershipStatus === user`. They should only get privileges (`membershipStatus === privilegedUser`) if they enter the correct passcode.
