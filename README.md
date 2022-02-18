@@ -6,7 +6,7 @@
 This is an exclusive Clubhouse where your members can write anonymous posts. Inside Clubhouse, members can see who the author of a post is, but outside they can only see the story and wonder who wrote it.
 
 ## Task overview
-1. Draft database models.
+1. Create database models.
    1. users
       - firstName
       - lastName
@@ -16,9 +16,9 @@ This is an exclusive Clubhouse where your members can write anonymous posts. Ins
       - isAdmin (via optional check box)
     2. messages
        - title
-       - timestamp, protected
+       - timestamp, available only to `privilegedUser`
        - body
-       - createdBy: `users[i]`, protected
+       - createdBy: `users[i]`, available only to `privilegedUser`
 2. Set up database and create project skeleton.
 3. Create `/sign-up` page with sign-up form.
    1. Secure passwords with hash and salt.
