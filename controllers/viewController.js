@@ -8,14 +8,13 @@ exports.get_signupForm = async (req, res) => {
 };
 
 exports.post_signupForm = async (req, res) => {
-    const errors = validationResult(req);
-    
-    console.log(errors, "><<<<>>><<")
-    const mapped = errors.mapped();
+    // const errors = validationResult(req);
+    // console.log(errors, "><<<<>>><<")
+    // const mapped = errors.mapped();
 
-    if(!errors.isEmpty()) {
-        return res.render("sign-up", {errors: mapped});
-    }
+    // if(!errors.isEmpty()) {
+    //     return res.render("sign-up", {errors: mapped});
+    // }
 
     const { isAdmin } = req.body;
 
@@ -40,12 +39,14 @@ exports.get_secretPasscode = async (req, res) => {
 };
 
 exports.post_secretPasscode = async (req, res) => {
-    const currentUser = await User.find({"email": req.session.userID});   
+    const currentUser = await User.find({"email": req.session.userID});  
+    console.log(req.session, "<<<<<<<<<<<<<<<") 
     const candidateSecret = req.body.secret;
 
     // If wrong secret, do NOT set user to privilegedUser
     if (candidateSecret !== process.env.PASSCODESECRET) {
         req.session = {
+            userID: currentUser[0]._id,
             firstName: currentUser[0].firstName,
             membershipStatus: currentUser[0].membershipStatus,
             isLoggedIn: true,
@@ -73,6 +74,7 @@ exports.post_secretPasscode = async (req, res) => {
 
     req.session = {
         firstName: currentUser[0].firstName,
+        userID: currentUser[0]._id,
         membershipStatus: currentUser[0].membershipStatus,
         isLoggedIn: true,
     };
@@ -136,9 +138,16 @@ exports.get_newMessage = async (req, res) => {
 }
 
 exports.post_newMessage = async (req, res) => {
+
+    const currentUser = await User.find({"email": req.session.userID})
     // console.log(req.session.userID, "<<<< posted by");
-    const createdBy = await User.findById(req.session.userID);
-    // console.log(createdBy.firstName, "<<<<<<<<<< createdBy");
+    const createdBy = await User.findById(req.session.userID)
+    console.log(">>>>>>>>>>>>>>>>>>")
+    console.log(currentUser);
+    console.log(req.session);
+    console.log(createdBy);
+    console.log(req.session.userID, "<<<<<<<<posted by")
+    console.log(createdBy.firstName, "<<<<<<<<<< createdBy");
     
     const message = new Message({
         createdBy: createdBy,
@@ -160,10 +169,13 @@ exports.home = async (req, res) => {
     };
 
     // Receive req.session
+    console.log(req.session);
     const {firstName, membershipStatus, isLoggedIn} = req.session;
 
     // Get all messages + populate each with their respective user:
     const messages = await Message.find().populate("createdBy");
+
+    console.log(messages, "<<<<<<<<<<<<<");
   
     res.status(200).render("home", {
         title: `Welcome | ${siteName}`,
