@@ -5,14 +5,18 @@
     }
 });
 
-const akos = [...document.querySelectorAll(".form input")]
+const allInputs = [...document.querySelectorAll(".form input")]
 
-// akos.forEach(function(currentElement) {
-//     let validInputs = 0;
-//     currentElement.addEventListener("keyup", () => {
-//         validInputs = Array.from(akos).filter( input => input.value !== "");
-//     })
-// // document.querySelector(".button").classList.toggle("disabled");
-// })
-
+allInputs.forEach((input) => {
+    input.addEventListener("keyup", () => {
+        console.log(input.value.length);
+        
+        if (input.value.length >= 3) {
+            console.log("YO")
+            document.querySelector(".button").classList.remove("disabled");
+        } else {
+            document.querySelector(".button").classList.add("disabled");
+        }
+    })
+});
 

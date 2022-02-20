@@ -22,18 +22,15 @@ block content
                             button.delete
                                 a.button.delete Delete
                     h3.title #{message.title}
-                    if membershipStatus === "privilegedUser"
+                    if membershipStatus === "privilegedUser" || membershipStatus === "admin"
                         h4.timestamp 
                             | Posted on 
                             = message.timestamp.toLocaleString("en-us", {year: "numeric", month: "long", day: "numeric"})
                             | .
                         h4.createdBy
                             | Posted by 
-                            span.createdBy akos123
+                            span.createdBy= message.createdBy.firstName
                     p.body #{message.body}
-        
-        - console.log(isLoggedIn, "<<<<<<<<<<<<<<<<<<<")
-        - console.log(messages.length, "<<<<<<<<<<<<<<<<<<<")
         if !messages.length && isLoggedIn
             p.emptyState 
                 | It's quiet in here. Why not 

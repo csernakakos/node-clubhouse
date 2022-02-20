@@ -98,9 +98,11 @@ exports.post_loginForm = async (req, res) => {
     };
 
     // If logging in is successful, redirect to /home with user data:
-    console.log(req.session, "currently logged in");
+    req.session.userID = user._id;
+    console.log(req.session.userID, "currently logged in");
     // Forward data to other routes via req.session:
     req.session = {
+        userID: user._id,
         firstName: user.firstName,
         membershipStatus: user.membershipStatus,
         isLoggedIn: true,
@@ -125,13 +127,18 @@ exports.get_newMessage = async (req, res) => {
 }
 
 exports.post_newMessage = async (req, res) => {
-    const message = await Message.create(req.body);
-    console.log(message);
-    // console.log(req.session);
-    // console.log("DSAAAAAA>>>>>>")
-    // message.timestamp = "AKOS";
-    // console.log(message, message.timestamp);
-    // console.log("<<<<<DSAAA");
+    // console.log(req.session.userID, "<<<< posted by");
+    const createdBy = await User.findById(req.session.userID);
+    // console.log(createdBy.firstName, "<<<<<<<<<< createdBy");
+    
+    const message = new Message({
+        createdBy: createdBy,
+        title: req.body.title,
+        body: req.body.body,
+    });
+
+    message.save();
+
     res.status(201).redirect("home");
 };
 
@@ -145,21 +152,16 @@ exports.home = async (req, res) => {
 
     // Receive req.session
     const {firstName, membershipStatus, isLoggedIn} = req.session;
-    console.log(req.session);
 
-    // Get all messages
-    const messages = await Message.find();
-    console.log(messages[0]);
-
-    console.log(isLoggedIn, "< isLoggedIn")
-    console.log(messages.length, "< messagesLength")
+    // Get all messages + populate each with their respective user:
+    const messages = await Message.find().populate("createdBy");
   
     res.status(200).render("home", {
         title: `Welcome | ${siteName}`,
         firstName,
         membershipStatus,
         isLoggedIn,
-        messages
+        messages,
     });
 };
 

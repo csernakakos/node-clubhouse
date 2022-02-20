@@ -11,12 +11,10 @@ Only a privilegedUser can see who posted a message and when.
 Only an admin can delete a message.
 
 ## Yet to be implemented
-- 1: relationship between users and messages (createdBy!)
 - 5: sanitize, validate
-- 11: improve site look
 
 ## Task overview
-1. Create database models.
+1. **DONE** Create database models.
    1. users
       - firstName
       - lastName
@@ -40,6 +38,6 @@ Only an admin can delete a message.
 8. **DONE** Create `/new-message` page with message form. To logged-in users, provide a link to "Create a new message."
 9. **DONE** Create `/home`, the home page. Here, all messages will be displayed to any visitor of the website. Show `timestamp` and `createdBy` to those users only whose `membershipStatus === privilegedUser`.
 10. **DONE** On the `/home` page, users whose `isAdmin === true` should have the ability to delete messages.
-11. Improve the site's look with CSS.
+11. **DONE** Improve the site's look with CSS.
 
 12. Deploy the project to heroku.

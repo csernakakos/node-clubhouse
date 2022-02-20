@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./userModel");
+const Schema = mongoose.Schema;
 
 const messageSchema = new mongoose.Schema({
     title: {
@@ -17,15 +18,8 @@ const messageSchema = new mongoose.Schema({
         required: [true, "Please enter a message text."],
         default: "My message...",
     },
-    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    createdBy: {type: Schema.Types.ObjectId, ref: "User"},
 });
-
-messageSchema.pre("save", async function(next){
-    console.log(this, "BEFORE SAVING");
-    this.timestamp2 = "AKOS";
-    console.log(this);
-    next();
-})
 
 const Message = mongoose.model("Message", messageSchema);
 

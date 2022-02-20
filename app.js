@@ -28,12 +28,12 @@ mongoose.connect(db, {
 
 // Initialize apps and middleware
 const app = express();
+app.use(cookieSession({name: "session", keys: [process.env.COOKIESECRET], maxAge: 24 * 60 * 60 * 1000}));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 app.use(express.json({limit: "10kb"}));
 app.use(express.urlencoded({extended: true, limit: "10kb"}));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cookieSession({name: "session", keys: [process.env.COOKIESECRET], maxAge: 24 * 60 * 60 * 1000}));
 app.use(cors());
 app.use(compression());
 app.use(helmet());
