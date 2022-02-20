@@ -12,7 +12,7 @@ Only an admin can delete a message.
 
 ## Yet to be implemented
 - 5: sanitize, validate. First steps have been taken, but there's more to work out both on `/login` and on `/signup`
-- 12: Code cleanup, then deploy and submit to TOP.
+- 12: Code cleanup, then deploy `git push heroku main` and submit to TOP.
 
 ## Task overview
 1. **DONE** Create database models.
