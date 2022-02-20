@@ -226,3 +226,10 @@ a.button.disabled {
     margin-left: 1rem;
     cursor: pointer;
 }
+
+
+@media only screen and (max-width: 400px) {
+    html {
+        font-size: 44.5%;
+    }
+}
