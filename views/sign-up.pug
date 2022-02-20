@@ -5,10 +5,25 @@ block content
 
     form.form(action="" method="POST")
         input(type="text" name="firstName" placeholder="first name")
+        if errors
+            //- p.error= errors.firstName.msg
+
         input(type="text" name="lastName" placeholder="last name")
+        if errors
+            //- p.error= errors.lastName.msg
+    
         input(type="text" name="email" placeholder="email")
+        if errors
+            p.error= errors.email.msg
+      
         input(type="password", name="password" placeholder="password")
+        if errors
+            p.error= errors.password.msg
+
         input(type="password", name="passwordConfirmation" placeholder="repeat password")
+        if errors
+            p.error= errors.passwordConfirmation.msg
+
         div.isAdmin
             label(for="isAdmin" name="isAdmin" value="Are you an admin?") Are you an admin?
             input.checkbox(type="checkbox", name="isAdmin")

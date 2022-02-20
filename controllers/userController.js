@@ -24,7 +24,7 @@ exports.signup_user = async (req, res) => {
 };
 
 exports.login_user = async (req, res) => {
-    console.log("POOOOOOOOOOST")
+    // console.log("POOOOOOOOOOST")
     const {email, password} = req.body;
 
     // If no email or password was provided:

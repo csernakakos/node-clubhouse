@@ -1,12 +1,21 @@
 const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 const siteName = "Clubhouse";
+const {validationResult} = require("express-validator");
 
 exports.get_signupForm = async (req, res) => {
     res.status(201).render("sign-up");
 };
 
 exports.post_signupForm = async (req, res) => {
+    const errors = validationResult(req);
+    
+    console.log(errors, "><<<<>>><<")
+    const mapped = errors.mapped();
+
+    if(!errors.isEmpty()) {
+        return res.render("sign-up", {errors: mapped});
+    }
 
     const { isAdmin } = req.body;
 
