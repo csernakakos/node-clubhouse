@@ -1,25 +1,44 @@
 extends base
 
 block content
-    h1 Clubhouse
+    h2
+        | Welcome
+        if isLoggedIn
+            span.highlight , #{firstName}
+        | !
 
     if isLoggedIn
-        p Welcome, #{firstName}. We're happy to have you as a new #{membershipStatus} among us.
-        a(href="/new-message") Post a message 
+        p 
+        a.new-message(href="/new-message") Post a message 
     else
         p You are not logged in. You can still see messages, but you won't see who created them and when.
     
-    hr
-    if messages
-        div#messages
-        each message in messages
-            div#message
-            if membershipStatus === "privilegedUser" || membershipStatus === "admin"
-                form(action=`/delete-message/${message._id}` method="POST")
-                    button#delete Delete
-            h3= message.title
-            if membershipStatus === "privilegedUser" || membershipStatus === "admin"
-                h4= message.timestamp
-                h4 CreatedBy Fake DATA: AKOS
-            p= message.body
+    div.messages
+        if messages.length
+            each message in messages
+                div.message
+                    if membershipStatus === "admin"
+                        form.form(action=`/delete-message/${message._id}` method="POST")
+                            button.delete
+                                a.button.delete Delete
+                    h3.title #{message.title}
+                    if membershipStatus === "privilegedUser"
+                        h4.timestamp 
+                            | Posted on 
+                            = message.timestamp.toLocaleString("en-us", {year: "numeric", month: "long", day: "numeric"})
+                            | .
+                        h4.createdBy
+                            | Posted by 
+                            span.createdBy akos123
+                    p.body #{message.body}
+        
+        - console.log(isLoggedIn, "<<<<<<<<<<<<<<<<<<<")
+        - console.log(messages.length, "<<<<<<<<<<<<<<<<<<<")
+        if !messages.length && isLoggedIn
+            p.emptyState 
+                | It's quiet in here. Why not 
+                a.new-message(href="/new-message") post a message 
+                | ?
+        if !messages.length && !isLoggedIn
+            p.emptyState Sign up or log in to start posting messages.
     

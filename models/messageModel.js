@@ -20,6 +20,13 @@ const messageSchema = new mongoose.Schema({
     createdBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
 });
 
+messageSchema.pre("save", async function(next){
+    console.log(this, "BEFORE SAVING");
+    this.timestamp2 = "AKOS";
+    console.log(this);
+    next();
+})
+
 const Message = mongoose.model("Message", messageSchema);
 
 module.exports = Message;

@@ -5,6 +5,8 @@
 ## Project overview
 This is an exclusive Clubhouse where your members can write anonymous messages. Inside Clubhouse, members can see who the author of a post is, but outside they can only see the story and wonder who wrote it.
 
+Every logged-in user can post a message.
+A basic user can only see the message title and the message body.
 Only a privilegedUser can see who posted a message and when.
 Only an admin can delete a message.
 

@@ -2,8 +2,6 @@ const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 const siteName = "Clubhouse";
 
-
-
 exports.get_signupForm = async (req, res) => {
     res.status(201).render("sign-up");
 };
@@ -116,7 +114,6 @@ exports.get_logOut = async (req, res) => {
     res.status(200).redirect("home");
 }
 
-
 exports.get_newMessage = async (req, res) => {
     const {firstName, membershipStatus, isLoggedIn} = req.session;
     res.status(200).render("new-message", {
@@ -129,8 +126,12 @@ exports.get_newMessage = async (req, res) => {
 
 exports.post_newMessage = async (req, res) => {
     const message = await Message.create(req.body);
-    console.log(req.session);
-    console.log(req.body);
+    console.log(message);
+    // console.log(req.session);
+    // console.log("DSAAAAAA>>>>>>")
+    // message.timestamp = "AKOS";
+    // console.log(message, message.timestamp);
+    // console.log("<<<<<DSAAA");
     res.status(201).redirect("home");
 };
 
@@ -149,6 +150,9 @@ exports.home = async (req, res) => {
     // Get all messages
     const messages = await Message.find();
     console.log(messages[0]);
+
+    console.log(isLoggedIn, "< isLoggedIn")
+    console.log(messages.length, "< messagesLength")
   
     res.status(200).render("home", {
         title: `Welcome | ${siteName}`,

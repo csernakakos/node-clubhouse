@@ -1,14 +1,17 @@
 extends base
 
 block content
-    h1 Post a message
+    h2 Post a message
 
     if isLoggedIn
-        p #{firstName}, this is your space to post messages.
+        p 
+            span.highlight #{firstName}
+            | , this is your space to post messages.
 
-        form(action="" method="POST")
+        form.form(action="" method="POST")
           input(type="text" name="title" placeholder="title of message")
           textarea(type="text" name="body" placeholder="body of message")
-          button Post this message
+          button
+            a.button.disabled Post
     else
         p You are not logged in, so you cannot post messages.
