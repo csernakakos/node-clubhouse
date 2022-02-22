@@ -1,7 +1,11 @@
+const asyncHandler = require("express-async-handler");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 
-exports.get_messages = async (req, res) => {
+// @desc    Get all messages
+// @route   GET /api/messages
+// @access  Public
+const get_messages = asyncHandler(async(req, res) => {
     const messages = await Message.find();
 
     res.status(200).json({
@@ -11,9 +15,12 @@ exports.get_messages = async (req, res) => {
             data: messages
         }
     })
-}
+});
 
-exports.create_message = async (req, res) => {
+// @desc    Create a message
+// @route   POST /api/messages
+// @access  Private
+const create_message = asyncHandler(async(req, res) => {
     const newMessage = await Message.create(req.body);
     res.status(201).json({
         status: "success",
@@ -21,4 +28,9 @@ exports.create_message = async (req, res) => {
             data: newMessage
         }
     })
+});
+
+module.exports = {
+    get_messages,
+    create_message
 }

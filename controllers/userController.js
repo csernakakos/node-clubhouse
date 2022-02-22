@@ -1,6 +1,10 @@
+const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 
-exports.get_users = async (req, res) => {
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private
+const get_users = asyncHandler(async(req, res) => {
     const users = await User.find();
 
     res.status(200).json({
@@ -10,9 +14,12 @@ exports.get_users = async (req, res) => {
             data: users
         }
     })
-};
+});
 
-exports.signup_user = async (req, res) => {
+// @desc    Create a user
+// @route   POST /api/users/sign-up
+// @access  Public
+const signup_user = asyncHandler(async(req, res) => {
     const newUser = await User.create(req.body);
 
     res.status(201).json({
@@ -21,9 +28,31 @@ exports.signup_user = async (req, res) => {
             data: newUser
         }
     })
-};
+});
 
-exports.login_user = async (req, res) => {
+// @desc    Give user privilegedUser rights
+// @route   POST /api/users/secret-passcode
+// @access  Private
+const enter_secret_passcode_user = asyncHandler(async(req, res) => {
+    const candidateSecret = req.body.secret;
+
+    if (candidateSecret !== process.env.PASSCODESECRET) {
+        return res.status(200).json({
+            status: "success",
+            msg: "you are NOT a privilegedUser."
+        })
+    };
+
+    res.status(200).json({
+        status: "success",
+        msg: "you are now a privilegedUser."
+    })
+});
+
+// @desc    Authenticate user
+// @route   POST /api/users/log-in
+// @access  Public
+const login_user = asyncHandler(async(req, res) => {
     // console.log("POOOOOOOOOOST")
     const {email, password} = req.body;
 
@@ -55,25 +84,12 @@ exports.login_user = async (req, res) => {
         msg: "You've successfully logged in.",
     });
     
-}
+});
 
-exports.enter_secret_passcode_user = async(req, res) => {
-    const candidateSecret = req.body.secret;
-
-    if (candidateSecret !== process.env.PASSCODESECRET) {
-        return res.status(200).json({
-            status: "success",
-            msg: "you are NOT a privilegedUser."
-        })
-    };
-
-    res.status(200).json({
-        status: "success",
-        msg: "you are now a privilegedUser."
-    })
-}
-
-exports.logout_user = async (req, res) => {
+// @desc    Log user out
+// @route   POST /api/users/log-out
+// @access  Private
+const logout_user = asyncHandler(async(req, res) => {
     req.session = null;
     res.status(200).json({
         status: "success",
@@ -82,4 +98,13 @@ exports.logout_user = async (req, res) => {
             loggedOut: true,
         }
     })
+});
+
+
+module.exports = {
+    get_users,
+    signup_user,
+    enter_secret_passcode_user,
+    login_user,
+    logout_user,
 }

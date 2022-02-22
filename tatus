@@ -1,0 +1,113 @@
+[33mcommit 66a846726be51c8e3243475e3abd775defb83f16[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31mheroku/main[m[33m)[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 19:07:38 2022 +0100
+
+    Bug fix
+
+[33mcommit 3a88555d3f1ad0c5f9d920509b300c463c19b563[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 18:26:09 2022 +0100
+
+    Updated Yet to be implemented list
+
+[33mcommit 7ec5faba88a2518d9840518b48a2796df5e9f101[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 18:25:40 2022 +0100
+
+    Updated Yet to be implemented list
+
+[33mcommit b4485fba2d2736177a1c7c5d293f95a9622e345a[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 18:22:47 2022 +0100
+
+    First steps with data validation and sanitization
+
+[33mcommit aaf203c55f4290b859176ed32cc5f3a294a29135[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 17:33:09 2022 +0100
+
+    Tiny CSS update
+
+[33mcommit 5681c86237f632951e16296e57d7ee4bf3fbfaf4[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 17:31:32 2022 +0100
+
+    Tiny CSS update
+
+[33mcommit d28a9de93fde20f3d8526d1081a3bb5091557216[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 17:27:59 2022 +0100
+
+    Created relationship between Message anduser in MongoDB database
+
+[33mcommit 61326df321dd73876ee7f70a78978c7686e5178b[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 16:01:33 2022 +0100
+
+    Added CSS mobile layout
+
+[33mcommit b6940b7bc2aa74b906dc24985cf4f8140ae4ad92[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 15:52:36 2022 +0100
+
+    Added node version to package.json
+
+[33mcommit d68310db3cdc6b5d3b5dd3740c3c880abbc2e63b[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Sun Feb 20 15:48:49 2022 +0100
+
+    Added styling
+
+[33mcommit 5e26ab7d39bef57326217573fb80a6817f3d230b[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 19:56:57 2022 +0100
+
+    Fixed bug where freshly registered users had to log in right after signing up
+
+[33mcommit 755aab73ae04caa5bb03d046885dd26e2ae4765e[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 19:42:21 2022 +0100
+
+    Implemented functionality apart from what's in Yet to be implemented
+
+[33mcommit aa9cf87d0ff7454ecdddde8d14d5c7045485ccb1[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 14:48:29 2022 +0100
+
+    Added /secret-passcode code for API
+
+[33mcommit cf73be953a3e37575eb57cbdc1863a833a73fc23[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 14:18:04 2022 +0100
+
+    Password encryption with hash and salt
+
+[33mcommit 05ed5bb9212911dff1cb11459edb2e3db7c001b3[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 12:07:08 2022 +0100
+
+    Added cookie-session, part 1.
+
+[33mcommit 1cb5cae368d04484c8b3dfd32e58a1080d103c94[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 10:42:43 2022 +0100
+
+    Created database models for users and for messages
+
+[33mcommit 01a0c39eaa64ce369b778349d306159316850db8[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Fri Feb 18 08:20:26 2022 +0100
+
+    Created route files
+
+[33mcommit fd87bf1c47941f9cbff802c8bb320b6681de4693[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Thu Feb 17 23:05:22 2022 +0100
+
+    Added full project description and task list.
+
+[33mcommit 69116bd630ce449a07b2e6b3240dcba606c9bc80[m
+Author: csernakakos <csernakakos@gmail.com>
+Date:   Thu Feb 17 22:38:25 2022 +0100
+
+    Initialized project with Express dependencies
