@@ -1,16 +1,33 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
-        maxLength: 50,
+        required: [true, "Please provide a user name."],
+        minLength: [4, "Minimum 4 characters."],
+        maxLength: [50, "Maximum 50 characters."],
+        trim: true,
     },
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true, select: false},
+    email: {
+        type: String,
+        required: [true, "Please provide an email address."],
+        unique: true,
+        lowercase: true,
+        validate: [validator.isEmail, "Please provide a valid email address."]
+    },
+    password: {
+        type: String,
+        required: [true, "Please provide a password."],
+        minLength: 8,
+        select: false,
+    },
     membershipStatus: {
         type: String,
-        enum: ["user", "privilegedUser", "admin",],
+        enum: {
+            values: ["user", "privilegedUser", "admin",],
+            message: ["This user type is not supported."],
+        },
         default: "user",
     },
     isAdmin: {
