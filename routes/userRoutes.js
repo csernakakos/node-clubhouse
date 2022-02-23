@@ -7,12 +7,13 @@ const {
     login_user,
     logout_user,
 } = require("../controllers/userController");
+const {protectWithToken} = require("./../config/authHandler");
 
 
 router.get("/", get_users);
 router.post("/sign-up", signup_user)
-router.post("/secret-passcode", enter_secret_passcode_user)
+router.post("/secret-passcode", protectWithToken, enter_secret_passcode_user)
 router.post("/log-in", login_user)
-router.post("/log-out", logout_user)
+router.post("/log-out", protectWithToken, logout_user)
 
 module.exports = router;

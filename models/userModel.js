@@ -1,23 +1,13 @@
 const mongoose = require("mongoose");
-const crypto = require("crypto"); // SALT
-const util = require("util");
-const scrypt = util.promisify(crypto.scrypt); // HASH
 
 const userSchema = new mongoose.Schema({
-    firstName: {
+    username: {
         type: String,
         required: true,
-        maxLength: 100,
+        maxLength: 50,
     },
-    lastName: {
-        type: String,
-        required: true,
-        maxLength: 100
-    },
-    // Have to validate, sanitize, store safely email and password. --->
-    email: {type: String, required: true},
-    password: {type: String, required: true, select: false,},
-    // <---
+    email: {type: String, required: true, unique: true},
+    password: {type: String, required: true, select: false},
     membershipStatus: {
         type: String,
         enum: ["user", "privilegedUser", "admin",],
@@ -27,43 +17,39 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-});
+}, {timestamps: true});
 
 
 // Hash and salt password before saving document to the database:
-userSchema.pre("save", async function(next){
-    console.log(this, "before saving");
+// userSchema.pre("save", async function(next){
 
-    const salt = crypto.randomBytes(9).toString("hex");
-    const hashedBuff = await scrypt(this.password, salt, 64);
-    this.password = `${hashedBuff.toString("hex")}-${salt}`;
+//     const salt = crypto.randomBytes(9).toString("hex");
+//     const hashedBuff = await scrypt(this.password, salt, 64);
+//     this.password = `${hashedBuff.toString("hex")}-${salt}`;
     
-    next();
-});
+//     next();
+// });
 
 
 // Create virtual property which will not be stored in database:
-userSchema.virtual("name").get(function(){
-    let fullName = "";
-    if (this.firstName && this.lastName) fullName = `${this.firstName} ${this.lastName}`
-    if (!this.firstName || !this.lastName) fullName = "";
-    return fullName;
-});
+// userSchema.virtual("name").get(function(){
+//     let fullName = "";
+//     if (this.firstName && this.lastName) fullName = `${this.firstName} ${this.lastName}`
+//     if (!this.firstName || !this.lastName) fullName = "";
+//     return fullName;
+// });
 
 // Compare two passwords function
-userSchema.methods.isCorrectPassword = async function(candidatePassword, userPassword){
-    // return await bcrypt.compare(candidatePassword, userPassword);
+// userSchema.methods.isCorrectPassword = async function(candidatePassword, userPassword){
+//     const result = userPassword.split("-");
+//     const hashed = result[0];
+//     const salt = result[1];
 
-    const result = userPassword.split("-");
-    const hashed = result[0];
-    const salt = result[1];
-    // Destructuring way: const [hashed, salt] = userPassword.split("-");
+//     const BUFFencryptedCandidatePassword = await scrypt(candidatePassword, salt, 64);
+//     const encryptedCandidatePassword = BUFFencryptedCandidatePassword.toString("hex");
 
-    const BUFFencryptedCandidatePassword = await scrypt(candidatePassword, salt, 64);
-    const encryptedCandidatePassword = BUFFencryptedCandidatePassword.toString("hex");
-
-    return hashed === encryptedCandidatePassword;
-}
+//     return hashed === encryptedCandidatePassword;
+// };
 
 const User = mongoose.model("User", userSchema);
 
