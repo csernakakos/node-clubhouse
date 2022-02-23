@@ -76,7 +76,7 @@ a.new-message {
     
 }
 
-a.new-message#main-action {
+/* a.new-message#main-action {
     background: var(--accent);
     font-size: 2.2rem;
     display: inline-block;
@@ -90,11 +90,15 @@ a.new-message#main-action {
 }
 
 a.new-message#main-action:hover {
-    background: rgb(225, 222, 40);
-}
+    background: rgb(198, 196, 34);
+} */
 
 .menu a:hover,
-a.new-message:hover {
+a.new-message:hover,
+.menu a:active,
+a.new-message:active,
+.menu a:focus,
+a.new-message:focus {
     color: var(--accent);
 }
 
@@ -110,8 +114,8 @@ a.new-message {
 }
 
 .menu .selected {
-    color: var(--h1);
-    text-decoration: underline;
+    color: var(--accent);
+    /* text-decoration: underline; */
 }
 
 /*FORM*/
@@ -127,7 +131,8 @@ a.new-message {
 
 .form > input,
 .form > textarea,
-.form a.button {
+.form a.button,
+#main-action {
     font-size: 2.2rem;
     width: 80%;
     padding: 1.3rem 1rem;
@@ -142,14 +147,20 @@ a.new-message {
     margin-top: 1.2rem;
 }
 
-.form a.button {
+.form a.button,
+#main-action {
     display: block;
     color: var(--mainFontText);
     cursor: pointer;
     background: var(--brand);
     transition: 0.2s ease-in-out;
     max-width: 50%;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
 
+#main-action:hover {
+    background: rgb(147, 38, 186);
 }
 
 .form a.button.enabled:hover {
@@ -167,6 +178,10 @@ a.button.disabled {
     font-family: var(--mainFont);
     color: #2c2b2f;
     /* font-weight: lighter; */
+}
+
+.form > textarea {
+    min-height: 24rem;
 }
 
 /* MESSAGES */
@@ -221,8 +236,8 @@ a.button.disabled {
 .message .body {
     margin-top: 1rem;
     margin-bottom: 1.4rem;
-    font-size: 1.9rem;
-    line-height: 1.6;
+    font-size: 2rem;
+    line-height: 1.7;
 }
 
 .form button.delete {

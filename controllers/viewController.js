@@ -212,7 +212,7 @@ const delete_message = asyncHandler(async(req, res) => {
         throw new Error("You are not authorized to delete messages.")
     }
 
-    await Message.findOneAndDelete(req.params.messageID);
+    await Message.findByIdAndDelete(req.params.messageID);
     res.status(200)
     res.redirect("/home");
 
