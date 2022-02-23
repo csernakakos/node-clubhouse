@@ -1,13 +1,30 @@
 const express = require("express");
 const router = express.Router();
-const viewController = require("../controllers/viewController");
-const { check, validateEmail } = require("express-validator");
+const {
+    home,
+    delete_message,
+    get_signupForm,
+    post_signupForm,
+    get_secretPasscode,
+    post_secretPasscode,
+    get_loginForm,
+    post_loginForm,
+    get_logOut,
+    get_newMessage,
+    post_newMessage,
+} = require("../controllers/viewController");
+
+
+function LOG(req, res, next){
+    console.log("LOG".bgYellow);
+    next();
+}
 
 router.get("/", (req, res) => {res.redirect("/home")});
-router.get("/home", viewController.home);
-router.post("/delete-message/:id", viewController.delete_message);
+router.get("/home", home);
+router.post("/delete-message/:id", delete_message);
 
-router.get("/sign-up", viewController.get_signupForm);
+router.get("/sign-up", get_signupForm);
 router.post("/sign-up", 
     // [
     // check("email")
@@ -35,18 +52,19 @@ router.post("/sign-up",
     //         }
     //     }),
     // ], 
-viewController.post_signupForm);
+post_signupForm);
 
-router.get("/secret-passcode", viewController.get_secretPasscode);
-router.post("/secret-passcode", viewController.post_secretPasscode);
+router.get("/secret-passcode", get_secretPasscode);
+router.post("/secret-passcode", post_secretPasscode);
 
-router.get("/log-in", viewController.get_loginForm);
-router.post("/log-in", viewController.post_loginForm);
+router.get("/log-in", get_loginForm);
+router.post("/log-in", post_loginForm);
 
-router.get("/log-out", viewController.get_logOut);
 
-router.get("/new-message", viewController.get_newMessage);
-router.post("/new-message", viewController.post_newMessage);
+router.get("/log-out", get_logOut);
+
+router.get("/new-message", get_newMessage);
+router.post("/new-message", post_newMessage);
 
 
 module.exports = router;

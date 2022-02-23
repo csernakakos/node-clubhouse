@@ -2,43 +2,77 @@ const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 const siteName = "Clubhouse";
 const {validationResult} = require("express-validator");
+const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-exports.get_signupForm = async (req, res) => {
+const get_signupForm = async (req, res) => {
     res.status(201).render("sign-up");
 };
 
-exports.post_signupForm = async (req, res) => {
-    // const errors = validationResult(req);
-    // console.log(errors, "><<<<>>><<")
-    // const mapped = errors.mapped();
+const post_signupForm = async (req, res) => {
 
-    // if(!errors.isEmpty()) {
-    //     return res.render("sign-up", {errors: mapped});
-    // }
+    // console.log(req.body, "<<<<<<<<<<<<<<<<<");
+    // const { isAdmin } = req.body;
 
-    const { isAdmin } = req.body;
+    // if (isAdmin) {
+    //     const obj1 = {...req.body};
+    //     obj1.isAdmin = true;
+    //     obj1.membershipStatus = "admin";
+    //     const newUser = await User.create(obj1);
+    //     req.session.userID = newUser.email;
 
-    if (isAdmin) {
-        const obj1 = {...req.body};
-        obj1.isAdmin = true;
-        obj1.membershipStatus = "admin";
-        const newUser = await User.create(obj1);
-        req.session.userID = newUser.email;
+    // } else {
+    //     const newUser = await User.create(req.body);
+    //     req.session.userID = newUser.email;
+    // };
 
+    // console.log("<<<<>>>>>>>>".black.bgCyan)
+
+    // If browser sends "on"
+    if (req.body.isAdmin === "on") {
+        req.body.isAdmin = true;
     } else {
-        const newUser = await User.create(req.body);
-        req.session.userID = newUser.email;
+        req.body.isAdmin = false;
+    }
+    
+    // Does the request contain all the necessary data?
+    if (!req.body.username || !req.body.email || !req.body.password) {
+        res.status(400)
+        throw new Error("Make sure you entered a username, email, and password.")
     };
+
+    const {username, email, password, isAdmin} = req.body;
+
+    // Does the user already exist in our database?
+    const userExists = await User.findOne({email});
+    if (userExists) {
+        res.status(400)
+        throw new Error("This email is already registered.")
+    };
+
+    // Generate password
+    const salt = await bcrypt.genSalt(9);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create user
+    const user = await User.create({
+        username,
+        email,
+        isAdmin,
+        password: hashedPassword
+    });
+
 
     res.status(201).redirect("/secret-passcode");
 };
 
-exports.get_secretPasscode = async (req, res) => {
+const get_secretPasscode = async (req, res) => {
  
     res.render("secret-passcode")
 };
 
-exports.post_secretPasscode = async (req, res) => {
+const post_secretPasscode = async (req, res) => {
     const currentUser = await User.find({"email": req.session.userID});  
     console.log(req.session, "<<<<<<<<<<<<<<<") 
     const candidateSecret = req.body.secret;
@@ -83,11 +117,11 @@ exports.post_secretPasscode = async (req, res) => {
 
 };
 
-exports.get_loginForm = async (req, res) => {
+const get_loginForm = async (req, res) => {
     res.status(200).render("log-in", {title: `Log in | ${siteName}`});
 };
 
-exports.post_loginForm = async (req, res) => {
+const post_loginForm = async (req, res) => {
     const {email, password} = req.body;
 
     // If no email or password was provided:
@@ -122,12 +156,12 @@ exports.post_loginForm = async (req, res) => {
     res.status(200).redirect("home");
 };
 
-exports.get_logOut = async (req, res) => {
+const get_logOut = async (req, res) => {
     req.session = null;
     res.status(200).redirect("home");
 }
 
-exports.get_newMessage = async (req, res) => {
+const get_newMessage = async (req, res) => {
     const {firstName, membershipStatus, isLoggedIn} = req.session;
     res.status(200).render("new-message", {
         title: `Post a message | ${siteName}`,
@@ -137,7 +171,7 @@ exports.get_newMessage = async (req, res) => {
     });
 }
 
-exports.post_newMessage = async (req, res) => {
+const post_newMessage = async (req, res) => {
 
     const currentUser = await User.find({"email": req.session.userID})
     // console.log(req.session.userID, "<<<< posted by");
@@ -161,7 +195,9 @@ exports.post_newMessage = async (req, res) => {
 };
 
 // GET HOME PAGE
-exports.home = async (req, res) => {
+const home = async (req, res) => {
+    console.log("HOME!")
+
     if (!req.session) {
         res.status(200).render("home", {
             title: `Welcome | ${siteName}`,
@@ -186,7 +222,21 @@ exports.home = async (req, res) => {
     });
 };
 
-exports.delete_message = async (req, res) => {
+const delete_message = async (req, res) => {
     const message = await Message.findOneAndDelete(req.params.id);
     res.status(200).redirect("/home");
+}
+
+module.exports = {
+    home,
+    delete_message,
+    get_signupForm,
+    post_signupForm,
+    get_secretPasscode,
+    post_secretPasscode,
+    get_loginForm,
+    post_loginForm,
+    get_logOut,
+    get_newMessage,
+    post_newMessage,
 }

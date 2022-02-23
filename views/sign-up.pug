@@ -4,14 +4,10 @@ block content
     h2 Sign up
 
     form.form(action="" method="POST")
-        input(type="text" name="firstName" placeholder="first name")
+        input(type="text" name="username" placeholder="user name")
         //- if errors
             //- p.error= errors.firstName.msg
-
-        input(type="text" name="lastName" placeholder="last name")
-        //- if errors
-            //- p.error= errors.lastName.msg
-    
+        
         input(type="text" name="email" placeholder="email")
         //- if errors
             p.error= errors.email.msg

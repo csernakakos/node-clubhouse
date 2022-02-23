@@ -28,6 +28,13 @@ const get_users = asyncHandler(async(req, res) => {
 // @access  Public
 const signup_user = asyncHandler(async(req, res) => {
     
+    // If browser sends "on"
+    if (req.body.isAdmin === "on") {
+        req.body.isAdmin = true;
+    } else {
+        req.body.isAdmin = false;
+    }
+    
     // Does the request contain all the necessary data?
     if (!req.body.username || !req.body.email || !req.body.password) {
         res.status(400)
@@ -58,15 +65,16 @@ const signup_user = asyncHandler(async(req, res) => {
     if (!user) {
         res.status(400)
         throw new Error("Invalid user data.")
-    } else {
-        res.status(201).json({
-            status: "success",
-            data: {
-                user,
-                token: signToken(user._id),
-            }
-        })
-    };
+    }
+    
+    res.status(201).json({
+        status: "success",
+        data: {
+            user,
+            token: signToken(user._id),
+        }
+    });
+  
 });
 
 // @desc    Give user privilegedUser rights
