@@ -16,7 +16,7 @@ const get_home = asyncHandler(async(req, res) => {
     };
 
     const {username, membershipStatus, isLoggedIn, isAdmin} = req.session;
-    const messages = await Message.find().populate("createdBy", "username");
+    const messages = await Message.find().sort({createdAt: 'descending'}).populate("createdBy", "username");
 
     res.status(200).render("home", {
         title: `Welcome | ${siteName}`,
@@ -130,7 +130,7 @@ const get_login = asyncHandler(async(req, res) => {
 
 const get_logout = asyncHandler(async(req, res) => {
     req.session = null;
-    res.status(200).redirect("home");
+    res.status(200).redirect("/log-in");
 });
 
 const post_login = asyncHandler(async(req, res) => {

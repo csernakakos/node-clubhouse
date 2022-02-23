@@ -52,7 +52,7 @@ h1 > span {
 }
 
 h2 {
-    font-weight: light;
+    font-weight: lighter;
 }
 
 span.highlight {
@@ -73,6 +73,24 @@ a.new-message {
     padding-left: 2rem;
     padding-right: 2rem;
     transition: 0.2s ease-in-out;
+    
+}
+
+a.new-message#main-action {
+    background: var(--accent);
+    font-size: 2.2rem;
+    display: inline-block;
+    font-weight: bolder;
+    color: var(--dark);
+    padding: 1rem 2rem;
+    border-radius: 6px;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 10px 20px hsla(0,0%,0%,0.15), 0 3px 6px hsla(0,0%,0%,0.1);
+    text-transform: uppercase;
+}
+
+a.new-message#main-action:hover {
+    background: rgb(225, 222, 40);
 }
 
 .menu a:hover,
@@ -93,6 +111,7 @@ a.new-message {
 
 .menu .selected {
     color: var(--h1);
+    text-decoration: underline;
 }
 
 /*FORM*/
@@ -100,6 +119,10 @@ a.new-message {
     margin-top: 1.8rem;
     display: flex;
     flex-direction: column;
+}
+
+.form.delete {
+    margin-top: initial;
 }
 
 .form > input,
@@ -148,7 +171,7 @@ a.button.disabled {
 
 /* MESSAGES */
 .messages {
-	margin-top: 2.4rem;
+	margin-top: 4rem;
 	margin-bottom: 2.4rem;
     box-shadow: 0 10px 20px hsla(0,0%,0%,0.15), 0 3px 6px hsla(0,0%,0%,0.1);
 	background: rgb(37, 28, 57);
@@ -168,8 +191,18 @@ a.button.disabled {
 }
 
 .message .title {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-family: var(--h1Font);
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.message .timestamp {
+    margin-top: 1.2rem;
+}
+
+.message .createdBy {
+    margin-bottom: 2rem;
 }
 
 .message .timestamp,
@@ -182,12 +215,14 @@ a.button.disabled {
 .message .createdBy span {
     font-family: var(--h1Font);
     color: var(--accent);
+    letter-spacing: 0.9px;
 }
 
 .message .body {
     margin-top: 1rem;
     margin-bottom: 1.4rem;
-    font-size: 1.6rem;
+    font-size: 1.9rem;
+    line-height: 1.6;
 }
 
 .form button.delete {
@@ -199,10 +234,10 @@ a.button.disabled {
 .form a.button.delete {
 	background: none;
 	width: initial;
-	padding: 0.8rem 1.6rem;
+	padding: 0.8rem 1.8rem;
 	margin: 0;
 	text-transform: uppercase;
-	font-size: 1.2rem;
+	font-size: 1.5rem;
 	color: #dd4a4a;
 	/* font-weight: bold; */
 	display: inline-block;

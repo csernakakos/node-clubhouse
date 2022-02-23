@@ -7,7 +7,7 @@
     "node": "14.16.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",

@@ -9,16 +9,16 @@ block content
 
     if isLoggedIn
         p 
-        a.new-message(href="/new-message") Post a message 
+        a.new-message#main-action(href="/new-message") Post a message 
     else
-        p You are not logged in. You can still see messages, but you won't see who created them and when.
+        p Log in to post messages.
     
     div.messages
         if messages.length
             each message in messages
                 div.message
                     if isAdmin
-                        form.form(action=`/messages/${message._id}` method="POST")
+                        form.form.delete(action=`/messages/${message._id}` method="POST")
                             button.delete
                                 a.button.delete Delete
                     h3.title #{message.title}
