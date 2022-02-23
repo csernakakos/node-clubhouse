@@ -14,8 +14,6 @@ function signToken(payload){
 const get_users = asyncHandler(async(req, res) => {
     const users = await User.find();
 
-    console.log(users, "<<<<<<<<<<<");
-
     res.status(200).json({
         status: "success",
         results: users.length,

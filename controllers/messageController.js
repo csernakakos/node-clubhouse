@@ -9,24 +9,17 @@ const User = require("../models/userModel");
 const get_messages = asyncHandler(async(req, res) => {
     let messages;
 
-    console.log(">>>>>>>>>>>".red);
-    console.log(req.user);
-    console.log("<<<<<".red);
-
     // If user is not a privilegedUser, don't send certain message fields to the client:
     if (!req.user || req.user.membershipStatus !== "privilegedUser") {
-        console.log("COOL")
         messages = await Message.find().select("-createdAt -updatedAt -createdBy");
     } else {
-        console.log("NOT COOL")
-        messages = await Message.find();
+        messages = await Message.find().populate("createdBy", "username"); // < RELATED DOCUMENTS 1.
     }
-
     res.status(200).json({
         status: "success",
         results: messages.length,
         data: {
-            messages
+            messages,
         }
     })
 });
@@ -43,18 +36,19 @@ const create_message = asyncHandler(async(req, res) => {
     }
 
     const {title, body} = req.body;
+    const user = await User.findById(req.user._id);  // < RELATED DOCUMENTS 2.
 
     // Create message and save it to the database
     const message = await Message.create({
         title,
         body,
-        // user
+        createdBy: user._id, // < RELATED DOCUMENTS 3.
     });
 
     res.status(201).json({
         status: "success",
         data: {
-            message
+            message,
         }
     })
 });

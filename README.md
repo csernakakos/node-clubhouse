@@ -12,7 +12,8 @@ Only a privilegedUser can see who posted a message and when.
 Only an admin can delete a message.
 
 ## Yet to be implemented
-- 1.2: CreatedBy `users[i]`, available only to `privilegedUser`: in the reworked MERN backend code, I've yet to add this.
+- **DONE** 1.2: CreatedBy `users[i]`, available only to `privilegedUser`: in the reworked MERN backend code, I've yet to add this.
+  - Revisit how I set up related documents and populated the required fields by looking up the `// < RELATED DOCUMENTS` comments.
 - **DONE** 1.2: timestamps should be available only to `privilegedUser`.
 - 5: sanitize, validate `/log-in` and `/sign-up` data.
 - 11: Re-add front-end now that the MERN backend code is reworked.
