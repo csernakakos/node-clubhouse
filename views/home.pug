@@ -4,7 +4,7 @@ block content
     h2
         | Welcome
         if isLoggedIn
-            span.highlight , #{firstName}
+            span.highlight , #{username}
         | !
 
     if isLoggedIn
@@ -17,19 +17,20 @@ block content
         if messages.length
             each message in messages
                 div.message
-                    if membershipStatus === "admin"
-                        form.form(action=`/delete-message/${message._id}` method="POST")
+                    if isAdmin
+                        form.form(action=`/messages/${message._id}` method="POST")
                             button.delete
                                 a.button.delete Delete
                     h3.title #{message.title}
-                    if membershipStatus === "privilegedUser" || membershipStatus === "admin"
+                    if membershipStatus === "privilegedUser"
                         h4.timestamp 
                             | Posted on 
-                            = message.timestamp.toLocaleString("en-us", {year: "numeric", month: "long", day: "numeric"})
+                            = message.createdAt.toLocaleString("en-us", {year: "numeric", month: "long", day: "numeric"})
                             | .
-                        h4.createdBy
-                            | Posted by 
-                            span.createdBy= message.createdBy.firstName
+                        if message.createdBy
+                            h4.createdBy
+                                | Posted by 
+                                span.createdBy= message.createdBy.username
                     p.body #{message.body}
         if !messages.length && isLoggedIn
             p.emptyState 

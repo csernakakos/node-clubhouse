@@ -10,7 +10,8 @@ const dotenv = require("dotenv");
 const {connectDB} = require("./config/db")
 const {errorHandler} = require("./config/errorHandler");
 
-const viewRouter = require("./routes/viewRoutes");
+const viewRouterOLD = require("./routes/viewRoutesOLD"); // < OBSOLETE, WAS USED BEFORE MERN REFACTOR
+const viewRouter = require("./routes/viewRoutes"); 
 const userRouter = require("./routes/userRoutes");
 const messageRouter = require("./routes/messageRoutes");
 
@@ -40,6 +41,7 @@ app.use(helmet());
 
 // ROUTES
 // Routes to website
+// app.use("/", viewRouterOLD);
 app.use("/", viewRouter);
 // Routes to API
 app.use("/api/v1/users", userRouter);

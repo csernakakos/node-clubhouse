@@ -6,237 +6,228 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const get_signupForm = async (req, res) => {
-    res.status(201).render("sign-up");
-};
 
-const post_signupForm = async (req, res) => {
-
-    // console.log(req.body, "<<<<<<<<<<<<<<<<<");
-    // const { isAdmin } = req.body;
-
-    // if (isAdmin) {
-    //     const obj1 = {...req.body};
-    //     obj1.isAdmin = true;
-    //     obj1.membershipStatus = "admin";
-    //     const newUser = await User.create(obj1);
-    //     req.session.userID = newUser.email;
-
-    // } else {
-    //     const newUser = await User.create(req.body);
-    //     req.session.userID = newUser.email;
-    // };
-
-    // console.log("<<<<>>>>>>>>".black.bgCyan)
-
-    // If browser sends "on"
-    if (req.body.isAdmin === "on") {
-        req.body.isAdmin = true;
-    } else {
-        req.body.isAdmin = false;
-    }
-    
-    // Does the request contain all the necessary data?
-    if (!req.body.username || !req.body.email || !req.body.password) {
-        res.status(400)
-        throw new Error("Make sure you entered a username, email, and password.")
-    };
-
-    const {username, email, password, isAdmin} = req.body;
-
-    // Does the user already exist in our database?
-    const userExists = await User.findOne({email});
-    if (userExists) {
-        res.status(400)
-        throw new Error("This email is already registered.")
-    };
-
-    // Generate password
-    const salt = await bcrypt.genSalt(9);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create user
-    const user = await User.create({
-        username,
-        email,
-        isAdmin,
-        password: hashedPassword
-    });
-
-
-    res.status(201).redirect("/secret-passcode");
-};
-
-const get_secretPasscode = async (req, res) => {
- 
-    res.render("secret-passcode")
-};
-
-const post_secretPasscode = async (req, res) => {
-    const currentUser = await User.find({"email": req.session.userID});  
-    console.log(req.session, "<<<<<<<<<<<<<<<") 
-    const candidateSecret = req.body.secret;
-
-    // If wrong secret, do NOT set user to privilegedUser
-    if (candidateSecret !== process.env.PASSCODESECRET) {
-        req.session = {
-            userID: currentUser[0]._id,
-            firstName: currentUser[0].firstName,
-            membershipStatus: currentUser[0].membershipStatus,
-            isLoggedIn: true,
-        };
-        return res.status(200).redirect("home");
-    };
-    
-    // If correct secret, set user to privilegedUser
-    if (currentUser[0].membershipStatus === "user") {
-        currentUser[0].membershipStatus = "privilegedUser";
-
-        const user = await User.findByIdAndUpdate(
-            currentUser[0]._id,
-            { membershipStatus: currentUser[0].membershipStatus },
-            {new: true, runValidators: true},
-            );
-
-            req.session = {
-                firstName: user.firstName,
-                membershipStatus: user.membershipStatus,
-                isLoggedIn: true,
-            };
-        res.status(200).redirect("home")
-    };
-
-    req.session = {
-        firstName: currentUser[0].firstName,
-        userID: currentUser[0]._id,
-        membershipStatus: currentUser[0].membershipStatus,
-        isLoggedIn: true,
-    };
-
-    return res.status(200).redirect("home")
-
-};
-
-const get_loginForm = async (req, res) => {
-    res.status(200).render("log-in", {title: `Log in | ${siteName}`});
-};
-
-const post_loginForm = async (req, res) => {
-    const {email, password} = req.body;
-
-    // If no email or password was provided:
-    if (!email || !password) {
-        return res.status(400).json({
-            status: "failure",
-            error: "Please provide both the email and the password!"
-        })
-    };
-
-    const user = await User.findOne({email}).select("+password");
-
-    // if user doesn't exist or passwords don't match:
-    if (!user || !(await user.isCorrectPassword(password, user.password))) {
-        return res.status(400).json({
-            status: "failure",
-            error: "This user doesn't exist, or the password you entered is wrong."
-        })
-    };
-
-    // If logging in is successful, redirect to /home with user data:
-    req.session.userID = user._id;
-    console.log(req.session.userID, "currently logged in");
-    // Forward data to other routes via req.session:
-    req.session = {
-        userID: user._id,
-        firstName: user.firstName,
-        membershipStatus: user.membershipStatus,
-        isLoggedIn: true,
-    };
-
-    res.status(200).redirect("home");
-};
-
-const get_logOut = async (req, res) => {
-    req.session = null;
-    res.status(200).redirect("home");
-}
-
-const get_newMessage = async (req, res) => {
-    const {firstName, membershipStatus, isLoggedIn} = req.session;
-    res.status(200).render("new-message", {
-        title: `Post a message | ${siteName}`,
-        firstName,
-        membershipStatus,
-        isLoggedIn,
-    });
-}
-
-const post_newMessage = async (req, res) => {
-
-    const currentUser = await User.find({"email": req.session.userID})
-    // console.log(req.session.userID, "<<<< posted by");
-    const createdBy = await User.findById(req.session.userID)
-    console.log(">>>>>>>>>>>>>>>>>>")
-    console.log(currentUser);
-    console.log(req.session);
-    console.log(createdBy);
-    console.log(req.session.userID, "<<<<<<<<posted by")
-    console.log(createdBy.firstName, "<<<<<<<<<< createdBy");
-    
-    const message = new Message({
-        createdBy: createdBy,
-        title: req.body.title,
-        body: req.body.body,
-    });
-
-    message.save();
-
-    res.status(201).redirect("home");
-};
-
-// GET HOME PAGE
-const home = async (req, res) => {
-    console.log("HOME!")
-
-    if (!req.session) {
+const get_home = asyncHandler(async(req, res) => {
+    // If cookie session is empty:
+    if(req.session === {} || !req.session) {
         res.status(200).render("home", {
             title: `Welcome | ${siteName}`,
         })
     };
 
-    // Receive req.session
-    console.log(req.session);
-    const {firstName, membershipStatus, isLoggedIn} = req.session;
+    const {username, membershipStatus, isLoggedIn, isAdmin} = req.session;
+    const messages = await Message.find().populate("createdBy", "username");
 
-    // Get all messages + populate each with their respective user:
-    const messages = await Message.find().populate("createdBy");
-
-    console.log(messages, "<<<<<<<<<<<<<");
-  
     res.status(200).render("home", {
         title: `Welcome | ${siteName}`,
-        firstName,
+        username,
         membershipStatus,
         isLoggedIn,
         messages,
-    });
-};
+        isAdmin,
+    })
+});
 
-const delete_message = async (req, res) => {
-    const message = await Message.findOneAndDelete(req.params.id);
-    res.status(200).redirect("/home");
-}
+const get_signup = asyncHandler(async(req, res) => {
+    res.status(200).render("sign-up")
+});
+
+const post_signup = asyncHandler(async(req, res) => {
+    // Turn isAdmin into a boolean
+    req.body.isAdmin === "on" ? req.body.isAdmin = true : req.body.isAdmin = false;
+
+    // Does the request contain all the necessary data?
+    if (!req.body.username || !req.body.email || !req.body.password || !req.body.passwordConfirmation) {
+        res.status(400)
+        throw new Error("Fill in all the fields and try again.")
+    }
+
+    // Destructure req.body into variables
+    const {username, email, password, passwordConfirmation, isAdmin} = req.body;
+
+    // If username or email already exists, or if passwords don't match
+    if (
+        username === await User.find({username}) ||
+        email === await User.find({email}) ||
+        password !== passwordConfirmation
+    ) {
+        res.status(400)
+        throw new Error("These credentials are already in use. Or, your password confirmation is not the same as your password.");
+    };
+
+    // Generate password
+    const salt = await bcrypt.genSalt(8);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create user
+    const user = User.create({
+        username,
+        email,
+        password: hashedPassword,
+        isAdmin,
+    });
+
+    // Add user email to cookie
+    req.session.email = email;
+
+    res.status(201).redirect("/secret-passcode")
+});
+
+const get_secretPasscode = asyncHandler(async(req, res) => {
+
+    if (!req.session.email) {
+        res.status(410)
+        throw new Error("Session expired.");
+    };
+    const email = req.session.email;
+    const user = await User.find({email});
+
+    res.status(200).render("secret-passcode");
+});
+
+const post_secretPasscode = asyncHandler(async(req, res) => {
+    // If cookie session contains no email:
+    if (!req.session.email) {
+        res.status(410)
+        throw new Error("Session expired.");
+    };
+
+    // Get user from database by email
+    const email = req.session.email;
+    let user = await User.findOne({email});
+    // If wrong secret, then do not modify user. Redirect to /home
+    // Add current user data to req.session, to be available on /home
+    if (req.body.secret !== process.env.PASSCODESECRET) {
+        req.session = {
+            username: user.username,
+            email: user.email,
+            membershipStatus: user.membershipStatus,
+            isLoggedIn: true,
+            isAdmin: user.isAdmin,
+        }
+
+        return res.status(200).redirect("/home");
+    };
+
+    // The secret is correct. If user is "user", and if user is not an admin already, then upgrade user to "privilegedUser"
+    if (user.membershipStatus === "user" && !user.isAdmin) {
+        user = await User.findByIdAndUpdate(user._id, {membershipStatus: "privilegedUser"}, {new: true, runValidators: true});
+        req.session = {
+            username: user.username,
+            email: user.email,
+            membershipStatus: user.membershipStatus,
+            isLoggedIn: true,
+            isAdmin: user.isAdmin,
+        }
+        return res.status(200).redirect("/home");
+    };
+
+});
+
+const get_login = asyncHandler(async(req, res) => {
+    res.status(200).render("log-in", {title: `Log in | ${siteName}`});
+});
+
+const get_logout = asyncHandler(async(req, res) => {
+    req.session = null;
+    res.status(200).redirect("home");
+});
+
+const post_login = asyncHandler(async(req, res) => {
+    
+    // If no email or password was provided:
+    if (!req.body.email || !req.body.password) {
+        res.status(400)
+        throw new Error("Please provide both the email and the password!")     
+    }
+    
+    const {email, password} = req.body;
+    const user = await User.findOne({email}).select("+password");
+
+    if(!user) {
+        res.status(400)
+        throw new Error("No such user exists.")
+    }
+
+    if(await bcrypt.compare(password, user.password)) {
+        req.session = {
+            username: user.username,
+            email: user.email,
+            membershipStatus: user.membershipStatus,
+            isLoggedIn: true,
+            isAdmin: user.isAdmin,
+        };
+        res.status(200)
+        res.redirect("/home");
+
+    } else {
+        res.status(400)
+        throw new Error("Missing or wrong login data.")
+    }
+});
+
+const get_newMessage = asyncHandler(async(req, res) => {
+    const {username, membershipStatus, isLoggedIn} = req.session;
+    res.status(200).render("new-message", {
+        title: `Post a message | ${siteName}`,
+        username,
+        membershipStatus,
+        isLoggedIn,
+    });
+});
+
+const post_newMessage = asyncHandler(async(req, res) => {
+    if(req.session === {} || !req.session) {
+        res.status(410)
+        throw new Error("Session expired.")
+    }
+
+    if (!req.body.title || !req.body.body) {
+        res.status(400)
+        throw new Error("Please add both a message title and a message body.")
+    }
+
+    const {title, body} = req.body;
+    const {email} = req.session;
+    const user = await User.findOne({email});
+    const message = await Message.create({
+        title,
+        body,
+        createdBy: user._id
+    });
+
+
+    res.status(200)
+    res.redirect("/home")
+});
+
+const delete_message = asyncHandler(async(req, res) => {
+    if(req.session === {} || !req.session) {
+        res.status(410)
+        throw new Error("Session expired.")
+    }
+
+    if(!req.session.isAdmin) {
+        res.status(403)
+        throw new Error("You are not authorized to delete messages.")
+    }
+
+    await Message.findOneAndDelete(req.params.messageID);
+    res.status(200)
+    res.redirect("/home");
+
+});
 
 module.exports = {
-    home,
-    delete_message,
-    get_signupForm,
-    post_signupForm,
+    get_home,
+    get_signup,
+    post_signup,
     get_secretPasscode,
     post_secretPasscode,
-    get_loginForm,
-    post_loginForm,
-    get_logOut,
+    get_login,
+    post_login,
+    get_logout,
     get_newMessage,
     post_newMessage,
+    delete_message,
 }

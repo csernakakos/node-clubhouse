@@ -17,8 +17,9 @@ Only an admin can delete a message.
 - **DONE** 1.2: timestamps should be available only to `privilegedUser`.
 - **DONE** 5: sanitize, validate `/log-in` and `/sign-up` data in API using `validator`.
 - 5: sanitize, validate `/log-in` and `/sign-up` FORM data in API using `express-validator`.
-- 11: Re-add front-end now that the MERN backend code is reworked.
-- 12: Code cleanup, then deploy `git push heroku main` and submit to TOP.
+- 11: Minor front-end design improvements.
+- 11: **DONE** Re-add front-end now that the MERN backend code is reworked.
+- 12: **DONE** Code cleanup, then deploy `git push heroku main` and submit to TOP.
 
 ## Task overview
 1. **DONE** Create database models.

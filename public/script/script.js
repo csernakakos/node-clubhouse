@@ -9,10 +9,8 @@ const allInputs = [...document.querySelectorAll(".form input")]
 
 allInputs.forEach((input) => {
     input.addEventListener("keyup", () => {
-        console.log(input.value.length);
         
         if (input.value.length >= 3) {
-            console.log("YO")
             document.querySelector(".button").classList.remove("disabled");
         } else {
             document.querySelector(".button").classList.add("disabled");
@@ -20,3 +18,12 @@ allInputs.forEach((input) => {
     })
 });
 
+// FETCH CALL
+// let messages;
+// const getMessages = async() => {
+//     const res = await fetch("/api/v1/messages");
+//     const data = await res.json();
+//     return messages = data.data.messages;
+// }
+
+// getMessages();
