@@ -5,6 +5,7 @@
 ## Project overview
 This is an exclusive Clubhouse where your members can write anonymous messages. Inside Clubhouse, members can see who the author of a post is, but outside they can only see the story and wonder who wrote it.
 
+Every visitor of the website can read all message titles and message bodies.
 Every logged-in user can post a message.
 A basic user can only see the message title and the message body.
 Only a privilegedUser can see who posted a message and when.
@@ -12,7 +13,7 @@ Only an admin can delete a message.
 
 ## Yet to be implemented
 - 1.2: CreatedBy `users[i]`, available only to `privilegedUser`: in the reworked MERN backend code, I've yet to add this.
-- 1.2: timestamps should be available only to `privilegedUser`.
+- **DONE** 1.2: timestamps should be available only to `privilegedUser`.
 - 5: sanitize, validate `/log-in` and `/sign-up` data.
 - 11: Re-add front-end now that the MERN backend code is reworked.
 - 12: Code cleanup, then deploy `git push heroku main` and submit to TOP.
