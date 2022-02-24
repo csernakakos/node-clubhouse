@@ -184,6 +184,13 @@ a.button.disabled {
     min-height: 24rem;
 }
 
+/* ERRRORS */
+p.error {
+    color: #dd4a4a;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
 /* MESSAGES */
 .messages {
 	margin-top: 4rem;

@@ -13,6 +13,8 @@ block content
     else
         p Log in to post messages.
     
+    if error
+        p.error= error
     div.messages
         if messages.length
             each message in messages

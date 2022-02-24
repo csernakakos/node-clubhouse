@@ -20,6 +20,8 @@ block content
         //- if errors
             p.error= errors.passwordConfirmation.msg
 
+        if error
+            p.error= error
         div.isAdmin
             label(for="isAdmin" name="isAdmin" value="Are you an admin?") Are you an admin?
             input.checkbox(type="checkbox", name="isAdmin")
