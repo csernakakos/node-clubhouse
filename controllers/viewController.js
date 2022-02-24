@@ -121,6 +121,7 @@ const post_secretPasscode = asyncHandler(async(req, res) => {
     // Get user from database by email
     const email = req.session.email;
     let user = await User.findOne({email});
+    console.log(user, "<<<<<<<<<<")
     // If wrong secret, then do not modify user. Redirect to /home
     // Add current user data to req.session, to be available on /home
     if (req.body.secret !== process.env.PASSCODESECRET) {
